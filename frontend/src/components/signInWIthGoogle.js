@@ -7,22 +7,28 @@ function SignInwithGoogle() {
   function googleLogin() {
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ prompt: "select_account" });
-    signInWithPopup(auth, provider).then(async (result) => {
-      console.log(result);
-      const user = result.user;
-      if (result.user) {
-        await setDoc(doc(db, "Users", user.uid), {
-          email: user.email,
-          firstName: user.displayName,
-          photo: user.photoURL,
-          lastName: "",
+    signInWithPopup(auth, provider)
+      .then(async (result) => {
+        console.log(result);
+        const user = result.user;
+        if (result.user) {
+          await setDoc(doc(db, "Users", user.uid), {
+            email: user.email,
+            firstName: user.displayName,
+            photo: user.photoURL,
+            lastName: "",
+          });
+          toast.success("User logged in Successfully", {
+            position: "top-center",
+          });
+          window.location.href = "/profile";
+        }
+      })
+      .catch((error) => {
+        toast.error(`Error :${error.message}`, {
+          position: "bottom-center",
         });
-        toast.success("User logged in Successfully", {
-          position: "top-center",
-        });
-        window.location.href = "/profile";
-      }
-    });
+      });
   }
   return (
     <div>
